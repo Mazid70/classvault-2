@@ -1,0 +1,148 @@
+import { useEffect, useState, useContext } from 'react';
+import { BiSolidUserAccount } from 'react-icons/bi';
+import { BsFillEyeFill, BsFillEyeSlashFill } from 'react-icons/bs';
+import { Link, useNavigate } from 'react-router';
+import { toast } from 'sonner';
+
+import useCallData from '../../customHooks/useCallData';
+import { AuthContext } from '../../Provider/AuthProvider';
+import bg from '../../assets/bg.jpg';
+
+// CSS
+const labelCss = `relative w-[250px] rounded-md p-[1.5px] bg-gray-700 transition-all duration-300 
+focus-within:bg-gradient-to-r focus-within:from-pink-400 focus-within:to-blue-500 
+focus-within:shadow-[0_0_18px_rgba(236,72,153,0.5)]`;
+
+const inputCss = `absolute left-3 top-4 text-white/70 transition-all duration-300 pointer-events-none 
+peer-focus:top-1 peer-focus:text-xs 
+peer-[&:not(:placeholder-shown)]:top-1 peer-[&:not(:placeholder-shown)]:text-xs 
+peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm`;
+
+const SignIn = () => {
+  const [isShow, setShow] = useState(false);
+  const { user, refetch } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const axiosData = useCallData();
+
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
+
+  const handlePass = () => setShow(!isShow);
+
+  const handleRegister = async e => {
+    e.preventDefault();
+    const form = e.target;
+
+    const studentId = form.id.value;
+    const password = form.password.value;
+
+    const toastId = toast.loading('Signing in...');
+
+    try {
+      await axiosData.post('/users/signin', {
+        studentId,
+        password,
+      });
+      await refetch();
+      toast.success('Welcome back 🎉', { id: toastId });
+
+      setTimeout(() => {
+        navigate('/');
+      }, 800);
+    } catch (error) {
+      const msg = error?.response?.data?.error || 'Invalid credentials';
+      toast.error(msg, { id: toastId });
+    }
+  };
+
+  return (
+    <main className="h-screen flex bg-[#0C1019]">
+      {/* LEFT */}
+      <div className="p-5 xl:p-0 flex-1 flex justify-center items-center container mx-auto">
+        <div className="max-w-md w-full">
+          <h1 className="font-bold text-sm text-white/60">
+            It's Your Platform
+          </h1>
+
+          <h2 className="font-extrabold text-4xl text-white mt-2">
+            Welcome Back
+          </h2>
+
+          <p className="mt-2 text-white/60">
+            Don't have an Account?{' '}
+            <Link to="/register" className="text-blue-400 hover:underline">
+              Register
+            </Link>
+          </p>
+
+          <form className="mt-6 space-y-4" onSubmit={handleRegister}>
+            {/* ID */}
+            <div className={`w-full ${labelCss}`}>
+              <input
+                type="text"
+                name="id"
+                required
+                placeholder=" "
+                className="peer w-full h-13 rounded-md bg-gray-700 pl-3 pt-5 pb-2 text-white outline-none"
+              />
+              <label className={inputCss}>Your ID</label>
+              <BiSolidUserAccount className="absolute right-3 top-4 text-white/70 text-xl" />
+            </div>
+
+            {/* Password */}
+            <div className={`w-full ${labelCss}`}>
+              <input
+                type={isShow ? 'text' : 'password'}
+                name="password"
+                required
+                placeholder=" "
+                className="peer w-full h-13 rounded-md bg-gray-700 pl-3 pt-5 pb-2 text-white outline-none"
+              />
+              <label className={inputCss}>Password</label>
+
+              {isShow ? (
+                <BsFillEyeSlashFill
+                  onClick={handlePass}
+                  className="absolute right-3 top-4 text-white/70 text-xl cursor-pointer"
+                />
+              ) : (
+                <BsFillEyeFill
+                  onClick={handlePass}
+                  className="absolute right-3 top-4 text-white/70 text-xl cursor-pointer"
+                />
+              )}
+            </div>
+
+            <Link to="/signin/forgot-password">
+              <p className="text-blue-400 text-right -mt-3 hover:underline">
+                Forget Password?
+              </p>
+            </Link>
+
+            {/* Button */}
+            <input
+              type="submit"
+              value="Sign In"
+              className="w-full mt-4 py-3 rounded-md font-semibold text-white cursor-pointer
+              bg-gradient-to-r from-pink-400 via-purple-500 to-blue-500 
+              hover:opacity-90 transition-all"
+            />
+          </form>
+        </div>
+      </div>
+
+      {/* RIGHT IMAGE */}
+      <div
+        className="hidden xl:block flex-1 relative bg-cover"
+        style={{ backgroundImage: `url(${bg})` }}
+      >
+        <div className="absolute inset-0 bg-gray-900/60" />
+      </div>
+    </main>
+  );
+};
+
+export default SignIn;
