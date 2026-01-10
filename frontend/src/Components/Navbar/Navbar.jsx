@@ -10,7 +10,7 @@ const Navbar = () => {
   const link = (
     <ul className="flex flex-col xl:flex-row  gap-5 xl:items-center">
       <Link link="/" title="HOME" />
-      <Link link="/notes" title="NOTES" />
+      <Link link="/materials" title="MATERIALS" />
       <Link link="/coverpage" title="COVER PAGE" />
       <Link link="/leaderboard" title="LEADERBOARD" />
     </ul>

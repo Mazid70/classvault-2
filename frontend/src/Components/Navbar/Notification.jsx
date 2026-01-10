@@ -112,7 +112,7 @@ const Notification = () => {
 
             {/* List */}
             <div className="max-h-80 overflow-y-auto space-y-3">
-              {notifications.length > 0 ? (
+              {notifications.length > 0 && user?.status==='Accepted'? (
                 notifications.map(noti => {
                   const isRead = noti.readBy?.includes(user?.studentId);
 

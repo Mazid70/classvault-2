@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { HiOutlineDocumentText } from 'react-icons/hi';
-import { FaFileAlt } from 'react-icons/fa';
+import { FaFileAlt, FaUpload } from 'react-icons/fa';
 import BTN from '../../Home/components/BTN';
 import axios from 'axios';
 import useCallData from '../../../customHooks/useCallData';
@@ -80,7 +80,11 @@ const UploadModal = ({ onClose, refetch }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="relative w-[420px] max-w-[90%] rounded-2xl border border-white/10 bg-[#1A1A1A]/90 p-8 shadow-xl">
+      <div
+        data-aos="zoom-in"
+        data-aos-duration="600"
+        className="relative w-[420px] max-w-[90%] rounded-2xl border border-white/10 bg-[#1A1A1A]/90 p-8 shadow-xl"
+      >
         {/* Close */}
         <button
           onClick={handleClose}
@@ -157,11 +161,14 @@ const UploadModal = ({ onClose, refetch }) => {
           )}
 
           {/* Submit */}
-          <BTN
+          <button
             type="submit"
+            className="bg-gradient-to-r from-pink-400 to-indigo-600 h-10 cursor-pointer font-bold rounded-2xl hover:scale-105 transition-all flex justify-center items-center gap-3"
             text={uploading ? `Uploading ${progress}%` : 'Upload'}
             disabled={uploading}
-          />
+          >
+            <FaUpload /> Upload
+          </button>
         </form>
       </div>
     </div>

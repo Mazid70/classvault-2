@@ -39,9 +39,9 @@ const Sidebar = () => {
 
   const menuItemsUser = [
     { title: 'Dashboard', icon: <FaTachometerAlt />, path: '/dashboard' },
-    { title: 'My Notes', icon: <FaFileAlt />, path: '/dashboard/mynotes' },
+    { title: 'My Notes', icon: <FaFileAlt />, path: '/dashboard/mymaterials' },
     { title: 'Home', icon: <FaHome />, path: '/' },
-    { title: 'All Materials', icon: <SiMaterialformkdocs />, path: '/notes' },
+    { title: 'All Materials', icon: <SiMaterialformkdocs />, path: '/materials' },
     {
       title: 'Coverpage',
       icon: <MdOutlineInsertPageBreak />,
@@ -55,11 +55,11 @@ const Sidebar = () => {
     {
       title: 'Pending Materials',
       icon: <FaFileAlt />,
-      path: '/dashboard/pending-notes',
+      path: '/dashboard/pending-materials',
     },
-    { title: 'My Materials', icon: <FaFileAlt />, path: '/dashboard/mynotes' },
+    { title: 'My Materials', icon: <FaFileAlt />, path: '/dashboard/mymaterials' },
     { title: 'Home', icon: <FaHome />, path: '/' },
-    { title: 'All Materials', icon: <SiMaterialformkdocs />, path: '/notes' },
+    { title: 'All Materials', icon: <SiMaterialformkdocs />, path: '/materials' },
     {
       title: 'Coverpage',
       icon: <MdOutlineInsertPageBreak />,

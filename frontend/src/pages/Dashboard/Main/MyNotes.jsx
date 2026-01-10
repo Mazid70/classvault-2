@@ -182,15 +182,24 @@ const MyNotes = () => {
               />
 
               {/* SUBJECT */}
-              <input
-                className="w-full mb-3 rounded-xl bg-white/5 border border-white/10 px-4 py-2 text-white outline-none focus:border-indigo-400"
-                value={editNote.subject}
+
+              <select
                 onChange={e =>
                   setEditNote({ ...editNote, subject: e.target.value })
                 }
-                placeholder="Subject"
-              />
-
+                value={editNote.subject}
+                name="subject"
+                required
+                className="bg-[#1E1E1E] mb-3 w-full backdrop-blur-lg border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none transition "
+              >
+                <option value="">Select Subject</option>
+                <option value="CSE 207">CSE 207</option>
+                <option value="CSE 208">CSE 208</option>
+                <option value="CSE 209">CSE 209</option>
+                <option value="CSE 210">CSE 210</option>
+                <option value="CSE 231">CSE 231</option>
+                <option value="CSE 232">CSE 232</option>
+              </select>
               {/* FILE */}
               <label className="flex items-center gap-3 rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-white cursor-pointer hover:border-indigo-400 mb-4">
                 <FaFileAlt className="text-indigo-400" />

@@ -3,7 +3,6 @@ import React from 'react';
 const BTN = () => {
   return (
     <button
-      href="#_"
       className="relative inline-flex items-center justify-start px-6 py-3 overflow-hidden font-medium transition-all bg-white rounded-3xl hover:bg-white group cursor-pointer"
       data-aos="fade-right"
       data-aos-duration="500"

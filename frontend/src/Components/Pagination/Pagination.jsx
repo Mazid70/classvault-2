@@ -14,7 +14,7 @@ const Pagination = ({ pages, currentPage, setCurrentPage }) => {
   };
 
   return (
-    <main className="flex justify-center items-center gap-2 fixed  bottom-40 left-1/2 -translate-x-1/2 z-50 mt-20">
+    <main className="flex justify-center items-center gap-2 xl:fixed  bottom-40 left-1/2 xl:-translate-x-1/2 z-50 mt-20">
       {/* Back */}
       <button
         onClick={backward}

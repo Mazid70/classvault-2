@@ -2,6 +2,7 @@ import '../../../App.css';
 import BTN from './BTN'
 import CountUp from 'react-countup';
 import hero from '../../../assets/hero.png'
+import { Link } from 'react-router';
 const Hero = () => {
   return (
     <main className="min-h-screen relative p-5 xl:p-0">
@@ -43,7 +44,13 @@ const Hero = () => {
               data-aos-delay="200"
             >
               <h1 className="font-semibold text-3xl xl:text-5xl">
-                <CountUp start={0} end={40} delay={1} scrollSpyOnce>
+                <CountUp
+                  start={0}
+                  end={35}
+                  delay={1}
+                  scrollSpyOnce
+                  enableScrollSpy
+                >
                   {({ countUpRef }) => (
                     <div>
                       <span ref={countUpRef} />+
@@ -60,9 +67,23 @@ const Hero = () => {
               data-aos-duration="500"
               data-aos-delay="400"
             >
-              <h1 className="font-semibold text-3xl xl:text-5xl">40+</h1>
+              <h1 className="font-semibold text-3xl xl:text-5xl">
+                <CountUp
+                  start={0}
+                  end={6}
+                  delay={1}
+                  scrollSpyOnce
+                  enableScrollSpy
+                >
+                  {({ countUpRef }) => (
+                    <div>
+                      <span ref={countUpRef} />+
+                    </div>
+                  )}
+                </CountUp>
+              </h1>
 
-              <h1 className="text-white/70 font-semibold mt-2">STUDENTS</h1>
+              <h1 className="text-white/70 font-semibold mt-2">COURSES</h1>
             </div>
           </div>
 
@@ -90,7 +111,9 @@ const Hero = () => {
               <li>Announcement Board</li>
               <li>Modern Animated Dark UI</li>
             </ul>
-            <BTN />
+            <Link to="/register">
+              <BTN />
+            </Link>
           </div>
         </div>
       </section>

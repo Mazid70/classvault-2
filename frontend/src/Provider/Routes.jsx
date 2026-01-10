@@ -28,9 +28,9 @@ export const router = createBrowserRouter([
       { path: '/signin/forgot-password', element: <ForgetPass /> },
       { path: '/reset-password/:id/:token', element: <ResetPass /> },
       { path: '/coverpage', element: <CoverPageGenerator /> },
-      { path: '/notes', element: <Notes /> },
+      { path: '/materials', element: <Notes /> },
       { path: '/profile', element: <Profile /> },
-      { path: '/leaderboard', element: <Leaderboard/> },
+      { path: '/leaderboard', element: <Leaderboard /> },
     ],
   },
   {
@@ -51,14 +51,14 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'pending-notes',
+        path: 'pending-materials',
         element: (
           <AdminCr>
             <PendingNotes />
           </AdminCr>
         ),
       },
-      { path: 'mynotes', element: <MyNotes /> },
+      { path: 'mymaterials', element: <MyNotes /> },
     ],
   },
 ]);

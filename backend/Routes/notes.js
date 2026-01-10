@@ -39,10 +39,10 @@ router.post('/upload', verifyToken, async (req, res) => {
 });
 router.get('/', verifyToken, async (req, res) => {
   try {
-    const { search, page = 1, limit = 6 } = req.query;
+    const { search, page = 1, limit = 6 ,filter} = req.query;
 
     let query = { approved: true };
-    console.log(search)
+ 
     if (search) {
       query = {
         ...query,
@@ -52,7 +52,7 @@ router.get('/', verifyToken, async (req, res) => {
         ],
       };
     }
-
+    if (filter) query.subject = filter;
     const totalCount = await Note.countDocuments(query);
 
     const result = await Note.find(query)

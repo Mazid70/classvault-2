@@ -3,10 +3,9 @@ import UploadModal from './UploadModal';
 import { FaCloudUploadAlt } from 'react-icons/fa';
 import { MdSearch } from 'react-icons/md';
 
-const TopBar = ({ refetch, setSearch, resetPage }) => {
+const TopBar = ({ refetch, setSearch, resetPage,setFilter }) => {
   const [openModal, setOpenModal] = useState(false);
   const [input, setInput] = useState('');
-
   // Trigger search
   const handleSearch = value => {
     resetPage();
@@ -54,17 +53,27 @@ const TopBar = ({ refetch, setSearch, resetPage }) => {
 
       {/* Select + Upload */}
       <div className="flex gap-3 mt-2 md:mt-0">
-        <select className="bg-[#3A3053]/70 backdrop-blur-lg border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none hover:bg-[#3A3053]/90 transition">
-          <option>All Subjects</option>
-          <option>CSE</option>
-          <option>EEE</option>
+        <select
+          onChange={e => setFilter(e.target.value)}
+          name="subject"
+          required
+          className="bg-[#252525] w-full backdrop-blur-lg border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none transition "
+        >
+          <option value="">Select Subject</option>
+          <option value="CSE 207">CSE 207</option>
+          <option value="CSE 208">CSE 208</option>
+          <option value="CSE 209">CSE 209</option>
+          <option value="CSE 210">CSE 210</option>
+          <option value="CSE 231">CSE 231</option>
+          <option value="CSE 232">CSE 232</option>
         </select>
 
         <button
           onClick={() => setOpenModal(true)}
           className="bg-gradient-to-r cursor-pointer from-pink-400 to-purple-500 px-5 py-3 rounded-full text-white font-medium flex items-center gap-2 shadow-md hover:shadow-lg hover:scale-105 transform transition"
         >
-          <FaCloudUploadAlt className="text-2xl" /> <span className='hidden xl:block'>Upload</span>
+          <FaCloudUploadAlt className="text-2xl" />{' '}
+          <span className="hidden xl:block">Upload</span>
         </button>
 
         {openModal && (

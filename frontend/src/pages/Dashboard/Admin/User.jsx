@@ -1,9 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { FaTrash, FaCheck, FaBan } from 'react-icons/fa';
 import useCallData from '../../../customHooks/useCallData';
-import { AuthContext } from '../../../Provider/AuthProvider';
 import Loader from '../../../Components/Loader/Loader';
+import { MdSearch } from 'react-icons/md';
 
 // Status and role colors
 const statusColors = {
@@ -14,25 +14,38 @@ const statusColors = {
 
 const roleColors = {
   admin: 'bg-purple-500',
-  cr: 'bg-blue-500',
+  cr: 'bg-yellow-500',
   student: 'bg-indigo-500',
 };
 
 const User = () => {
   const axiosData = useCallData();
-  const { user: currentUser } = useContext(AuthContext);
 
+  // Controlled search input
+  const [input, setInput] = useState('');
   const [search, setSearch] = useState('');
   const [limit, setLimit] = useState(10);
   const [modalUser, setModalUser] = useState(null);
   const [blockReason, setBlockReason] = useState('');
   const [blockModal, setBlockModal] = useState(false);
 
-  const {
-    data: users = [],
-    isLoading,
-    refetch,
-  } = useQuery({
+  // Trigger search
+  const handleSearch = value => {
+    setSearch(value.trim());
+    setLimit(10); // reset limit when searching
+  };
+
+  // Input change
+  const handleInputChange = e => setInput(e.target.value);
+
+  // Reset search
+  const handleReset = () => {
+    setInput('');
+    handleSearch('');
+  };
+
+  // Fetch users
+  const { data: users = [], isLoading, refetch } = useQuery({
     queryKey: ['users', search, limit],
     queryFn: async () => {
       const res = await axiosData.get(`/users?search=${search}&limit=${limit}`);
@@ -41,12 +54,14 @@ const User = () => {
     keepPreviousData: true,
   });
 
+  // Open modals
   const openStatusModal = user => {
     setModalUser(user);
     setBlockModal(false);
     setBlockReason('');
   };
 
+  // Update status
   const handleStatusUpdate = async newStatus => {
     if (!modalUser) return;
     try {
@@ -67,6 +82,7 @@ const User = () => {
     }
   };
 
+  // Delete user
   const handleDelete = async userId => {
     if (!confirm('Are you sure you want to delete this user?')) return;
     try {
@@ -77,41 +93,49 @@ const User = () => {
     }
   };
 
-  if (isLoading)
-    return <Loader/>
+  if (isLoading) return <Loader />;
 
   return (
     <div className="xl:p-6 w-full overflow-x-hidden">
-      {/* Header */}
+      {/* Header with TopBar-style search */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
         <h2 className="text-white text-2xl font-semibold">Users</h2>
-        <input
-          type="text"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          placeholder="Search users..."
-          className="px-4 py-2 rounded-xl bg-white/10 text-white border border-white/20 placeholder-gray-400 focus:outline-none focus:border-indigo-400 backdrop-blur"
-        />
+
+        {/* Search Input + Buttons */}
+        <div className="flex gap-2 w-full md:w-auto">
+          <input
+            type="text"
+            value={input}
+            onChange={handleInputChange}
+            onKeyDown={e => e.key === 'Enter' && handleSearch(input)}
+            placeholder="Search users..."
+            className="px-4 py-2 rounded-xl bg-white/10 text-white border border-white/20 placeholder-gray-400 focus:outline-none focus:border-indigo-400 backdrop-blur w-full md:w-[300px]"
+          />
+          <button
+            onClick={() => handleSearch(input)}
+            className="bg-indigo-500 cursor-pointer xl:text-2xl p-2  xl:px-4 xl:py-2 rounded-xl text-white hover:bg-indigo-600 transition"
+          >
+          <MdSearch/>
+          </button>
+          <button
+            onClick={handleReset}
+            className="bg-gray-500 cursor-pointer xl:px-4 px-1 xl:py-2 rounded-xl text-white hover:bg-gray-600 transition"
+          >
+            Reset
+          </button>
+        </div>
       </div>
 
       {/* Table */}
       <div
-        className="overflow-x-auto rounded-2xl border-t border-white/20 "
+        className="overflow-x-auto rounded-2xl border-t border-white/20"
         data-aos="zoom-in"
         data-aos-duration="600"
       >
         <table className="min-w-full border-separate border-spacing-y-2">
           <thead>
             <tr>
-              {[
-                'Photo',
-                'Name',
-                'Student ID',
-                'Email',
-                'Role',
-                'Status',
-                'Actions',
-              ].map(h => (
+              {['Photo', 'Name', 'Student ID', 'Email', 'Role', 'Status', 'Actions'].map(h => (
                 <th
                   key={h}
                   className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
@@ -138,19 +162,13 @@ const User = () => {
                 </td>
 
                 {/* Name */}
-                <td className="px-6 py-4 whitespace-nowrap text-white">
-                  {u?.userName || '?'}
-                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-white">{u?.userName || '?'}</td>
 
                 {/* Student ID */}
-                <td className="px-6 py-4 whitespace-nowrap text-white">
-                  {u?.studentId || '?'}
-                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-white">{u?.studentId || '?'}</td>
 
                 {/* Email */}
-                <td className="px-6 py-4 whitespace-nowrap text-white break-all">
-                  {u?.email || '?'}
-                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-white break-all">{u?.email || '?'}</td>
 
                 {/* Role */}
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -176,9 +194,8 @@ const User = () => {
 
                 {/* Actions */}
                 <td className="px-6 py-4 whitespace-nowrap flex justify-center gap-2">
-                  {u?.role !== 'admin' && (
+                  {u?.role !== 'admin' && u?.role !== 'cr' && (
                     <>
-                      {/* Accept button if not accepted */}
                       {u.status !== 'Accepted' && (
                         <button
                           onClick={() => openStatusModal(u)}
@@ -188,8 +205,6 @@ const User = () => {
                           <FaCheck />
                         </button>
                       )}
-
-                      {/* Block button if accepted */}
                       {u.status === 'Accepted' && (
                         <button
                           onClick={() => {
@@ -202,8 +217,6 @@ const User = () => {
                           <FaBan />
                         </button>
                       )}
-
-                      {/* Delete */}
                       <button
                         onClick={() => handleDelete(u._id)}
                         className="text-red-400 cursor-pointer hover:text-red-500 transition"

@@ -104,8 +104,8 @@ const Leaderboard = () => {
           data-aos="fade-up"
           data-aos-duration="700"
         >
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm min-w-[600px]">
+          <div className="overflow-x-auto xl:h-[250px]">
+            <table className="w-full text-sm min-w-[600px]  ">
               <thead className="bg-white/5 text-gray-400">
                 <tr>
                   <th className="px-6 py-4 text-left">Rank</th>

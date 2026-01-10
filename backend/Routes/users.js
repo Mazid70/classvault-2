@@ -269,4 +269,61 @@ router.post('/reset-password/:id/:token', async (req, res) => {
     res.status(500).json({ error: error.message })
   }
 })
+// PATCH /users/:id  => update profile
+router.patch('/:id', verifyToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { userName, email, photoUrl } = req.body;
+
+    // Only allow user to update their own profile OR admin
+    if (req.user.userId !== id && req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Not authorized' });
+    }
+
+    const user = await User.findById(id);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+
+    // Update fields
+    if (userName) user.userName = userName;
+    if (email) user.email = email;
+    if (photoUrl) user.photoUrl = photoUrl;
+
+    await user.save();
+
+    res.status(200).json({ success: true, message: 'Profile updated successfully', user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+// PATCH /users/:id/password => change password
+router.patch('/:id/password', verifyToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { oldPassword, newPassword } = req.body;
+
+    // Only allow user to update their own password OR admin
+    if (req.user.userId !== id && req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Not authorized' });
+    }
+
+    const user = await User.findById(id);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+
+    // Check old password
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) return res.status(400).json({ success: false, message: 'Old password incorrect' });
+
+    // Update to new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({ success: true, message: 'Password updated successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 module.exports = router

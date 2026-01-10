@@ -16,6 +16,7 @@ const Notes = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
+  const [filter, setFilter] = useState('');
   const itemsPerPage = 6;
 
 const {
@@ -23,10 +24,10 @@ const {
   refetch,
   isLoading,
 } = useQuery({
-  queryKey: ['notes', search, currentPage],
+  queryKey: ['notes', search, currentPage,filter],
   queryFn: async () => {
     const res = await axiosData.get(
-      `/notes?search=${search}&page=${currentPage}&limit=${itemsPerPage}`
+      `/notes?search=${search}&filter=${filter}&page=${currentPage}&limit=${itemsPerPage}`
     );
     return res.data;
   },
@@ -66,7 +67,12 @@ if (!user || user.status === 'Pending' || user.status === 'Blocked') {
           </p>
         </div>
 
-        <TopBar refetch={refetch} setSearch={setSearch} resetPage={resetPage} />
+        <TopBar
+          refetch={refetch}
+          setSearch={setSearch}
+          resetPage={resetPage}
+          setFilter={setFilter}
+        />
 
         {/* Cards */}
         {notes.length === 0 ? (
