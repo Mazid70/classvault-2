@@ -29,7 +29,7 @@ const Leaderboard = () => {
 
   return (
     <div
-      className="min-h-screen xl:h-screen bg-[#0b0f1a] pt-24 pb-12 px-4 relative overflow-hidden"
+      className="min-h-screen  bg-[#0b0f1a] pt-24 pb-12 px-4 relative overflow-hidden"
       data-aos="fade-in"
     >
       {/* Ambient glow */}
@@ -104,7 +104,7 @@ const Leaderboard = () => {
           data-aos="fade-up"
           data-aos-duration="700"
         >
-          <div className="overflow-x-auto xl:h-[250px]">
+          <div className="overflow-x-auto ">
             <table className="w-full text-sm min-w-[600px]  ">
               <thead className="bg-white/5 text-gray-400">
                 <tr>
@@ -182,9 +182,10 @@ const TopCard = ({
   dataAosDelay,
 }) => {
   // Logic for responsive sizing of cards
-  const cardWidth = size === 'lg' ? 'w-78 md:w-52' : 'w-78 md:w-52';
+  const cardWidth =
+    size === 'lg' ? 'w-78 xl:w-56 2xl:w-62' : 'w-78 xl:w-56  2xl:w-62';
   const imgSize =
-    size === 'lg' ? 'w-24 h-24 md:w-28 md:h-28' : 'w-20 h-20 md:w-24 md:h-24';
+    size === 'lg' ? 'w-24  h-24 xl:h-18 xl:w-18 2xl:w-28 2xl:h-28' : 'w-20 h-20 xl:h-16 xl:w-16 2xl:w-24 2xl:h-24';
 
   return (
     <div
@@ -199,7 +200,7 @@ const TopCard = ({
       />
 
       <div
-        className={`relative bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/15 shadow-2xl ${cardWidth}`}
+        className={`relative bg-white/10 backdrop-blur-xl rounded-3xl p-6 xl:p-3 2xl:p-6 border border-white/15 shadow-2xl ${cardWidth}`}
       >
         {/* Crown */}
         {winner && (

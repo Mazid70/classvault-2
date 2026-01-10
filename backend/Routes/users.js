@@ -10,7 +10,8 @@ require('dotenv').config()
 router.get('/', verifyToken, async (req, res) => {
   try {
     const search = req.query.search || '';
-    const limit = parseInt(req.query.limit) || 10;
+    const limit = parseInt(req.query.limit) || 6;
+    const page = parseInt(req.query.page) || 1;
 
     const query = {
       _id: { $ne: req.user.userId }, // skip current user
@@ -21,16 +22,20 @@ router.get('/', verifyToken, async (req, res) => {
       ],
     };
 
+    const totalCount = await User.countDocuments(query); // total count for pagination
+
     const users = await User.find(query)
+      .skip((page - 1) * limit)
       .limit(limit)
       .sort({ createdAt: -1 });
 
-    res.status(200).json({ users });
+    res.status(200).json({ data: users, totalCount });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
+
 // PATCH /users/:id/status
 router.patch('/:id/status', verifyToken, async (req, res) => {
   try {

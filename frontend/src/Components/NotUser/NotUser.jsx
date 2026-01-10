@@ -44,7 +44,7 @@ const NotUser = ({ status }) => {
           <p className="text-gray-400 mt-4 text-xs md:text-sm">
             If you have any questions, contact us at:{' '}
             <span className="text-indigo-400 font-medium">
-              support@classvault.com
+              classvault26@gmail.com
             </span>
           </p>
         </div>

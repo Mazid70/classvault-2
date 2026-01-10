@@ -1,8 +1,8 @@
 import {
   FaFacebookF,
   FaGithub,
-  FaLinkedinIn,
   FaEnvelope,
+  FaWhatsapp,
 } from 'react-icons/fa';
 import { HiOutlineAcademicCap, HiOutlineCode } from 'react-icons/hi';
 import AOS from 'aos';
@@ -27,8 +27,9 @@ const Footer = () => {
               <h2 className="text-2xl font-bold text-white">Class Vault</h2>
             </div>
             <p className="text-white/70 leading-relaxed">
-              A secure academic vault built for BUBT CSE intake 54 section 01 students to share
-              notes, and essential learning resources ,Genarate cove page etc .
+              A secure academic vault built for BUBT CSE intake 54 section 01
+              students to share notes, and essential learning resources
+              ,Genarate cove page etc .
             </p>
           </div>
 
@@ -59,18 +60,21 @@ const Footer = () => {
             <p className="text-white/70 mb-4">
               Suggestions or issues? Reach out anytime.
             </p>
-
-            <div className="flex gap-4">
-              <a className="footer-icon" href="#">
+            <p>classvault26@gmail.com</p>
+            <div className="flex gap-4 mt-4">
+              <a
+                className="footer-icon"
+                href="https://www.facebook.com/mazidur.rahman.158"
+              >
                 <FaFacebookF />
               </a>
-              <a className="footer-icon" href="#">
+              <a className="footer-icon" href="https://github.com/Mazid70">
                 <FaGithub />
               </a>
-              <a className="footer-icon" href="#">
-                <FaLinkedinIn />
+              <a className="footer-icon" href="https://wa.me/+8801639479596">
+                <FaWhatsapp />
               </a>
-              <a className="footer-icon" href="#">
+              <a className="footer-icon" href="mailto:mazidurmazid@gmail.com">
                 <FaEnvelope />
               </a>
             </div>
@@ -85,7 +89,9 @@ const Footer = () => {
               <div>
                 <p className="text-white font-semibold">Mazidur Rahman</p>
                 <p className="text-white/70 text-sm">Mern Stack Developer</p>
-                <p className="text-white/60 text-sm">B.Sc in CSE · BUBT (running)</p>
+                <p className="text-white/60 text-sm">
+                  B.Sc in CSE · BUBT (running)
+                </p>
               </div>
             </div>
           </div>

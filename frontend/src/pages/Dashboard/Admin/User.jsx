@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { FaTrash, FaCheck, FaBan } from 'react-icons/fa';
+import { MdSearch } from 'react-icons/md';
 import useCallData from '../../../customHooks/useCallData';
 import Loader from '../../../Components/Loader/Loader';
-import { MdSearch } from 'react-icons/md';
+import Pagination from '../../../Components/Pagination/Pagination';
+import { toast } from 'sonner'; // 1️⃣ import sonner
 
 // Status and role colors
 const statusColors = {
@@ -21,38 +23,49 @@ const roleColors = {
 const User = () => {
   const axiosData = useCallData();
 
-  // Controlled search input
+  // Search & Pagination
   const [input, setInput] = useState('');
   const [search, setSearch] = useState('');
-  const [limit, setLimit] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+
+  // Modals
   const [modalUser, setModalUser] = useState(null);
   const [blockReason, setBlockReason] = useState('');
   const [blockModal, setBlockModal] = useState(false);
 
-  // Trigger search
+  // Search handlers
   const handleSearch = value => {
     setSearch(value.trim());
-    setLimit(10); // reset limit when searching
+    setCurrentPage(1); // reset to first page on search
   };
-
-  // Input change
   const handleInputChange = e => setInput(e.target.value);
-
-  // Reset search
   const handleReset = () => {
     setInput('');
     handleSearch('');
   };
 
-  // Fetch users
-  const { data: users = [], isLoading, refetch } = useQuery({
-    queryKey: ['users', search, limit],
+  // Fetch users with pagination
+  const {
+    data: userData,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ['users', search, currentPage],
     queryFn: async () => {
-      const res = await axiosData.get(`/users?search=${search}&limit=${limit}`);
-      return res.data.users;
+      const res = await axiosData.get(
+        `/users?search=${search}&page=${currentPage}&limit=${itemsPerPage}`
+      );
+      return res.data;
     },
     keepPreviousData: true,
   });
+
+  // Destructure
+  const users = userData?.data || [];
+  const totalCount = userData?.totalCount || 0;
+  const totalPages = Math.ceil(totalCount / itemsPerPage);
+  const pages = [...Array(totalPages).keys()];
 
   // Open modals
   const openStatusModal = user => {
@@ -61,7 +74,7 @@ const User = () => {
     setBlockReason('');
   };
 
-  // Update status
+  // Status update
   const handleStatusUpdate = async newStatus => {
     if (!modalUser) return;
     try {
@@ -73,12 +86,17 @@ const User = () => {
         status: newStatus,
         reason: blockReason,
       });
+
+      // ✅ show success toast
+      toast.success(`${modalUser.userName} is now ${newStatus}`);
+
       setModalUser(null);
       setBlockReason('');
       setBlockModal(false);
       refetch();
     } catch (err) {
       console.error(err);
+      toast.error('Something went wrong!');
     }
   };
 
@@ -87,9 +105,11 @@ const User = () => {
     if (!confirm('Are you sure you want to delete this user?')) return;
     try {
       await axiosData.delete(`/users/${userId}`);
+      toast.success('User deleted successfully');
       refetch();
     } catch (err) {
       console.error(err);
+      toast.error('Failed to delete user');
     }
   };
 
@@ -97,11 +117,9 @@ const User = () => {
 
   return (
     <div className="xl:p-6 w-full overflow-x-hidden">
-      {/* Header with TopBar-style search */}
+      {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
         <h2 className="text-white text-2xl font-semibold">Users</h2>
-
-        {/* Search Input + Buttons */}
         <div className="flex gap-2 w-full md:w-auto">
           <input
             type="text"
@@ -113,9 +131,9 @@ const User = () => {
           />
           <button
             onClick={() => handleSearch(input)}
-            className="bg-indigo-500 cursor-pointer xl:text-2xl p-2  xl:px-4 xl:py-2 rounded-xl text-white hover:bg-indigo-600 transition"
+            className="bg-indigo-500 cursor-pointer xl:text-2xl p-2 xl:px-4 xl:py-2 rounded-xl text-white hover:bg-indigo-600 transition"
           >
-          <MdSearch/>
+            <MdSearch />
           </button>
           <button
             onClick={handleReset}
@@ -135,7 +153,15 @@ const User = () => {
         <table className="min-w-full border-separate border-spacing-y-2">
           <thead>
             <tr>
-              {['Photo', 'Name', 'Student ID', 'Email', 'Role', 'Status', 'Actions'].map(h => (
+              {[
+                'Photo',
+                'Name',
+                'Student ID',
+                'Email',
+                'Role',
+                'Status',
+                'Actions',
+              ].map(h => (
                 <th
                   key={h}
                   className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
@@ -152,7 +178,6 @@ const User = () => {
                 key={u?._id}
                 className="bg-white/10 backdrop-blur-lg rounded-xl transition hover:bg-white/20"
               >
-                {/* Photo */}
                 <td className="px-6 py-4 whitespace-nowrap">
                   <img
                     src={u?.photoUrl || 'https://i.pravatar.cc/40'}
@@ -160,17 +185,15 @@ const User = () => {
                     className="w-10 h-10 rounded-full border border-white/20 object-cover"
                   />
                 </td>
-
-                {/* Name */}
-                <td className="px-6 py-4 whitespace-nowrap text-white">{u?.userName || '?'}</td>
-
-                {/* Student ID */}
-                <td className="px-6 py-4 whitespace-nowrap text-white">{u?.studentId || '?'}</td>
-
-                {/* Email */}
-                <td className="px-6 py-4 whitespace-nowrap text-white break-all">{u?.email || '?'}</td>
-
-                {/* Role */}
+                <td className="px-6 py-4 whitespace-nowrap text-white">
+                  {u?.userName || '?'}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-white">
+                  {u?.studentId || '?'}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-white break-all">
+                  {u?.email || '?'}
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span
                     className={`px-3 py-1 rounded-xl text-white text-xs ${
@@ -180,8 +203,6 @@ const User = () => {
                     {u?.role || '?'}
                   </span>
                 </td>
-
-                {/* Status */}
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span
                     className={`px-3 py-1 rounded-xl text-white text-xs ${
@@ -191,8 +212,6 @@ const User = () => {
                     {u?.status || 'Pending'}
                   </span>
                 </td>
-
-                {/* Actions */}
                 <td className="px-6 py-4 whitespace-nowrap flex justify-center gap-2">
                   {u?.role !== 'admin' && u?.role !== 'cr' && (
                     <>
@@ -233,16 +252,13 @@ const User = () => {
         </table>
       </div>
 
-      {/* Load More */}
-      {users.length >= limit && (
-        <div className="flex justify-center mt-4">
-          <button
-            onClick={() => setLimit(prev => prev + 10)}
-            className="px-6 py-2 rounded-xl bg-indigo-500/80 hover:bg-indigo-600 text-white transition"
-          >
-            Load More
-          </button>
-        </div>
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <Pagination
+          pages={pages}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
       )}
 
       {/* Accept Modal */}
@@ -254,7 +270,7 @@ const User = () => {
             </h2>
             <button
               onClick={() => handleStatusUpdate('Accepted')}
-              className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-xl transition mb-2"
+              className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-xl transition cursor-pointer mb-2"
             >
               Accept
             </button>
@@ -263,7 +279,7 @@ const User = () => {
                 setModalUser(null);
                 setBlockModal(false);
               }}
-              className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded-xl transition"
+              className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded-xl transition cursor-pointer"
             >
               Cancel
             </button>
@@ -272,7 +288,7 @@ const User = () => {
                 setModalUser(null);
                 setBlockModal(false);
               }}
-              className="absolute top-3 right-3 text-white text-xl font-bold"
+              className="absolute top-3 right-3 text-white text-xl font-bold cursor-pointer"
             >
               ×
             </button>
@@ -296,7 +312,7 @@ const User = () => {
             <div className="flex gap-4">
               <button
                 onClick={() => handleStatusUpdate('Blocked')}
-                className="flex-1 bg-red-500 hover:bg-red-600 text-white py-2 rounded-xl transition"
+                className="flex-1 bg-red-500 hover:bg-red-600 text-white py-2 rounded-xl transition cursor-pointer"
               >
                 Block
               </button>
@@ -305,7 +321,7 @@ const User = () => {
                   setBlockModal(false);
                   setBlockReason('');
                 }}
-                className="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-2 rounded-xl transition"
+                className="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-2 rounded-xl transition cursor-pointer"
               >
                 Cancel
               </button>
@@ -316,7 +332,7 @@ const User = () => {
                 setBlockModal(false);
                 setBlockReason('');
               }}
-              className="absolute top-3 right-3 text-white text-xl font-bold"
+              className="absolute top-3 right-3 text-white text-xl font-bold cursor-pointer"
             >
               ×
             </button>
