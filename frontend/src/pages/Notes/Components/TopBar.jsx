@@ -71,7 +71,7 @@ const TopBar = ({ refetch, search, setSearch, resetPage, setFilter,filter }) => 
           {openModal && (
             <UploadModal
               onClose={() => setOpenModal(false)}
-              onSubmit={refetch}
+              onSubmit={()=>refetch()}
               refetch={refetch}
             />
           )}
