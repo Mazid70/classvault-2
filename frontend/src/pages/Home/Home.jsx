@@ -5,8 +5,8 @@ import Footer from '../../Components/Footer/Footer';
 
 const Home = () => {
   return (
-    <main className="  overflow-hidden">
-      <div className="xl:p-10">
+    <main className="  overflow-hidden pb-10 xl:pb-0">
+      <div className="xl:p-10 ">
         <Hero />
         <Services />
       </div>

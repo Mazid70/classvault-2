@@ -21,34 +21,7 @@ const Navbar = () => {
   return (
     <nav className="px-5 h-16 xl:px-10 2xl:px-0 backdrop-blur-xl fixed top-0 border-b-[0.1px] border-gray-800 z-50 w-full flex items-center">
       <div className="w-7xl mx-auto text-white flex justify-between items-center">
-        <div className="dropdown xl:hidden">
-          <div tabIndex={0} role="button" className=" lg:hidden">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              {' '}
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h8m-8 6h16"
-              />{' '}
-            </svg>
-          </div>
-          <div
-            tabIndex="-1"
-            className="menu border border-indigo-900/60 menu-sm dropdown-content bg-[#262030] rounded-box z-1 mt-3 w-52 p-2 shadow"
-            data-aos="fade-down"
-            data-aos-duration="600"
-            data-aos-once="true"
-          >
-            {link}
-          </div>
-        </div>
+        
         <div className=" flex items-center gap-3">
           <img src={logo} alt="" className="h-6 w-6" />
           <h1 className="font-bold">Class Vault</h1>
@@ -69,7 +42,7 @@ const Navbar = () => {
             </NavLink>
           )}
         </div>
-        <div className="lg:hidden">{user && <Notification />}</div>
+        <div className="lg:hidden ml-20">{user && <Notification />}</div>
         {user && (
           <div
             className="dropdown tooltip dropdown-hover tooltip-left  cursor-pointer"

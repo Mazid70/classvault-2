@@ -81,7 +81,7 @@ const CoverPageGenerator = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#1a1a1a] flex justify-center items-center p-4 overflow-hidden relative">
+    <div className="min-h-screen bg-[#1a1a1a] flex justify-center items-center p-4 overflow-hidden relative pb-20 md:pb-0">
       {/* Decorative gradients */}
       <div className="absolute left-1/2 top-1/2 h-[800px] w-[20px] -translate-x-1/2 -translate-y-1/2 bg-gradient-to-b from-purple-500 to-pink-400 blur-[80px] rotate-6" />
       <div className="absolute left-1/2 top-1/2 h-[900px] w-[20px] -translate-x-1/2 -translate-y-1/2 bg-gradient-to-b from-pink-400 to-purple-500 blur-[80px] rotate-90" />

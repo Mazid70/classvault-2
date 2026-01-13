@@ -29,7 +29,7 @@ const Leaderboard = () => {
 
   return (
     <div
-      className="min-h-screen  bg-[#0b0f1a] pt-24 pb-12 px-4 relative overflow-hidden"
+      className="min-h-screen  bg-[#0b0f1a] pt-20 pb-20 md:pb-0 pb-12 px-4 relative overflow-hidden"
       data-aos="fade-in"
     >
       {/* Ambient glow */}
